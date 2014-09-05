@@ -1,6 +1,11 @@
 <script src="sketch-textures.js" type="text/javascript" charset="utf-8"></script>
 
 <style>
+body {
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+}
+
 #result {
 	text-align: center;
 }
@@ -11,27 +16,81 @@
 
 	background-color: white;
 }
+
+hr {
+	clear: both;
+}
+
+.control {
+	clear: both;
+	position: relative;
+	padding: 0.5em 10em;
+}
+
+.control .name {
+	position: absolute;
+	top: 0.5em;
+	left: 0;
+	height: 100%;
+	width: 9em;
+	text-align: right;
+}
+
+.control input {
+	width: 4em;
+	vertical-align: top;
+	position: relative;
+	top: -3px;
+	text-align: center;
+}
+
+.control .control {
+	float: left;
+	clear: none;
+	margin: 0;
+	padding: 0em 1em;
+	color: #888;
+}
 </style>
 
 <div id="settings">
-	<div class="shape">
-		<input class="number" id="shape-width" type="text" value="400" />x<input class="number" id="shape-height" type="text" value="400" />
+	<div class="control">
+		<span class="name">Dimensions (px)</span>
+		<input class="number" id="shape-width" type="text" value="400" /> x <input class="number" id="shape-height" type="text" value="400" />
+	</div>
+	<div class="control">
+		<span class="name">Line length (px)</span>
 		<input class="number" id="line-length" type="text" value="100" />
 	</div>
-	<div class="stroke">
-		<input class="density" id="stroke-density" value="1" />
-		<input class="colour" id="stroke-colour" value="#ACE" />
-		<input class="opacity" id="stroke-opacity" value="0.1" />
-		<input class="line-width" id="stroke-width" value="1.2" />
-		<input class="angle" id="stroke-angle" value="30" />
-		<input class="taper" id="stroke-taper" type="text" value="0.5">
-		<input class="wrap" id="stroke-wrap" type="checkbox" checked>
+	<div class="control"><span class="name">Fill density</span><input class="density" id="stroke-density" value="1" /></div>
+	<div class="control">
+		<span class="name">Oversample</span>
+		<input type="text" id="oversample" type="text" value="2" />
 	</div>
-	
-	<input type="submit" id="button-go" value="generate" />
-	<input type="text" id="oversample" type="text" value="2" />
-	<input type="text" id="background" type="text" value="#FFF" />
-	<input type="checkbox" id="display-background">
+	<div class="control">
+		<span class="name">Background</span>
+		<input type="text" id="background" type="text" value="#FFF" />
+	</div>
+	<hr>
+	<div class="control">
+		<span class="name">Stroke</span>
+		<div class="control">colour: <input class="colour" id="stroke-colour" value="#ACE" /></div>
+		<div class="control">opacity: <input class="opacity" id="stroke-opacity" value="0.1" /></div>
+		<div class="control">width: <input class="line-width" id="stroke-width" value="1.2" /></div>
+	</div>
+	<div class="control">
+		<div class="control">angle: <input class="angle" id="stroke-angle" value="30" /></div>
+		<div class="control">tapering factor: <input class="taper" id="stroke-taper" type="text" value="0.5"></div>
+	</div>
+	<div class="control">
+		<span class="name">Wrap</span>
+		<div class="control">horizontal: <input class="wrap" id="stroke-wrap-horizontal" type="checkbox"></div>
+		<div class="control">vertical: <input class="wrap" id="stroke-wrap-vertical" type="checkbox"></div>
+	</div>
+	<div class="control">
+		<span class="name"><input type="submit" id="button-go" value="GO" /></span>
+		<div class="control">preview on page background:<input type="checkbox" id="display-background"></div>
+	</div>
 </div>
 
 <script>
@@ -51,7 +110,10 @@ document.getElementById('button-go').onclick = function () {
 		lineWidth: parseFloat(document.getElementById('stroke-width').value)*oversample,
 		angle: parseFloat(document.getElementById('stroke-angle').value),
 		taper: parseFloat(document.getElementById('stroke-taper').value),
-		wrap: document.getElementById('stroke-wrap').checked
+		wrap: {
+			x: document.getElementById('stroke-wrap-horizontal').checked,
+			y: document.getElementById('stroke-wrap-vertical').checked
+		}
 	};
 	console.log(shape, options);
 	
