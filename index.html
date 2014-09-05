@@ -9,12 +9,11 @@ body {
 #result {
 	text-align: center;
 }
+
 #result img {
 	padding: 20px;
 	border: 1px solid black;
 	border-radius: 10px;
-
-	background-color: white;
 }
 
 hr {
@@ -44,6 +43,10 @@ hr {
 	text-align: center;
 }
 
+.control input.wide {
+	width: 8em;
+}
+
 .control .control {
 	float: left;
 	clear: none;
@@ -69,26 +72,27 @@ hr {
 	</div>
 	<div class="control">
 		<span class="name">Background</span>
-		<input type="text" id="background" type="text" value="#FFF" />
+		<input type="checkbox" id="background-enabled" checked />
+		<input type="text" class="wide" id="background" type="text" value="#FFF" />
 	</div>
 	<hr>
 	<div class="control">
 		<span class="name">Stroke</span>
-		<div class="control">colour: <input class="colour" id="stroke-colour" value="#ACE" /></div>
-		<div class="control">opacity: <input class="opacity" id="stroke-opacity" value="0.1" /></div>
-		<div class="control">width: <input class="line-width" id="stroke-width" value="1.2" /></div>
+		<div class="control">colour: <input class="wide" id="stroke-colour" value="#ACE" /></div>
+		<div class="control">opacity: <input id="stroke-opacity" value="0.1" /></div>
+		<div class="control">width: <input id="stroke-width" value="1.2" /></div>
 	</div>
 	<div class="control">
-		<div class="control">angle: <input class="angle" id="stroke-angle" value="30" /></div>
-		<div class="control">tapering factor: <input class="taper" id="stroke-taper" type="text" value="0.5"></div>
+		<div class="control">angle: <input id="stroke-angle" value="30" /></div>
+		<div class="control">tapering factor: <input id="stroke-taper" type="text" value="0.5"></div>
 	</div>
 	<div class="control">
 		<span class="name">Wrap</span>
-		<div class="control">horizontal: <input class="wrap" id="stroke-wrap-horizontal" type="checkbox"></div>
-		<div class="control">vertical: <input class="wrap" id="stroke-wrap-vertical" type="checkbox"></div>
+		<div class="control">horizontal: <input id="stroke-wrap-horizontal" type="checkbox"></div>
+		<div class="control">vertical: <input id="stroke-wrap-vertical" type="checkbox"></div>
 	</div>
 	<div class="control">
-		<span class="name"><input type="submit" id="button-go" value="GO" /></span>
+		<span class="name"><input type="submit" class="wide" id="button-go" value="generate" /></span>
 		<div class="control">preview on page background:<input type="checkbox" id="display-background"></div>
 	</div>
 </div>
@@ -96,7 +100,7 @@ hr {
 <script>
 document.getElementById('button-go').onclick = function () {
 	var oversample = parseFloat(document.getElementById('oversample').value);
-	var background = document.getElementById('background').value;
+	var background = document.getElementById('background-enabled').checked && document.getElementById('background').value;
 	var shape = {
 		width: parseInt(document.getElementById('shape-width').value, 10),
 		height: parseInt(document.getElementById('shape-height').value, 10)
@@ -138,6 +142,7 @@ document.getElementById('button-go').onclick = function () {
 		
 		var dataUrl = smallCanvas.toDataURL();
 		var image = document.createElement('img');
+		image.style.backgroundColor = document.getElementById('background').value;
 		image.src = dataUrl;
 		result.appendChild(image);
 		if (document.getElementById('display-background').checked) {
