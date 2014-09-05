@@ -123,6 +123,8 @@ function hashFromInputs() {
 		var value = input.value;
 		if (input.type === 'checkbox') {
 			value = input.checked ? '1' : '0';
+		} else if (input.type === 'button' || input.type === 'submit') {
+			continue;
 		}
 		result.push(encodeURIComponent(input.id || input.name) + '=' + encodeURIComponent(value));
 	}
