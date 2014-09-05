@@ -165,9 +165,9 @@ document.getElementById('button-go').onclick = function () {
 	var options = {
 		density: parseFloat(document.getElementById('stroke-density').value),
 		stroke: document.getElementById('stroke-colour').value,
-		opacity: parseFloat(document.getElementById('stroke-opacity').value),
-		lineLength: parseFloat(document.getElementById('line-length').value)*oversample,
-		lineWidth: parseFloat(document.getElementById('stroke-width').value)*oversample,
+		opacity: Math.max(0.01, parseFloat(document.getElementById('stroke-opacity').value)),
+		lineLength: Math.max(5, parseFloat(document.getElementById('line-length').value))*oversample,
+		lineWidth: Math.max(0.001, parseFloat(document.getElementById('stroke-width').value))*oversample,
 		angle: parseFloat(document.getElementById('stroke-angle').value),
 		taper: parseFloat(document.getElementById('stroke-taper').value),
 		wrap: {
