@@ -111,6 +111,7 @@ setInterval(function () {
 		if (inputHash !== lastInputHash) {
 			lastInputHash = inputHash;
 			window.location.replace('#' + inputHash);
+			lastHash = inputHash;
 		}
 	}
 }, 100);
