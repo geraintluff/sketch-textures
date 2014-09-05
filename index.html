@@ -98,6 +98,60 @@ hr {
 </div>
 
 <script>
+var lastHash = null;
+var lastInputHash = null;
+
+setInterval(function () {
+	var locationHash = window.location.href.replace(/^[^#]#?/, '');
+	if (locationHash !== lastHash) {
+		lastHash = locationHash;
+		inputsFromHash(locationHash);
+	} else {
+		var inputHash = hashFromInputs();
+		if (inputHash !== lastInputHash) {
+			lastInputHash = inputHash;
+			window.location.replace('#' + inputHash);
+		}
+	}
+}, 100);
+
+function hashFromInputs() {
+	var result = [];
+	var inputs = document.getElementsByTagName('input');
+	for (var i = 0; i < inputs.length; i++) {
+		var input = inputs[i];
+		var value = input.value;
+		if (input.type === 'checkbox') {
+			value = input.checked ? '1' : '0';
+		}
+		result.push(encodeURIComponent(input.id || input.name) + '=' + encodeURIComponent(value));
+	}
+	return result.join('&');
+}
+
+function inputsFromHash(hash) {
+	var obj = {};
+	hash.split('&').forEach(function (part) {
+		var key = part.split('=', 1)[0];
+		obj[decodeURIComponent(key)] = decodeURIComponent(part.substring(key.length + 1));
+	});
+	var inputs = document.getElementsByTagName('input');
+	for (var i = 0; i < inputs.length; i++) {
+		var input = inputs[i];
+		if (obj[input.id || input.name]) {
+			var value = obj[input.id || input.name];;
+			if (input.type === 'checkbox') {
+				input.checked = !!parseInt(value);
+			} else {
+				input.value = value;
+			}
+		}
+	}
+}
+
+</script>
+
+<script>
 document.getElementById('button-go').onclick = function () {
 	var oversample = parseFloat(document.getElementById('oversample').value);
 	var background = document.getElementById('background-enabled').checked && document.getElementById('background').value;
