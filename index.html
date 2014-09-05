@@ -102,7 +102,7 @@ var lastHash = null;
 var lastInputHash = null;
 
 setInterval(function () {
-	var locationHash = window.location.href.replace(/^[^#]#?/, '');
+	var locationHash = window.location.href.replace(/^[^#]*#?/, '');
 	if (locationHash !== lastHash) {
 		lastHash = locationHash;
 		inputsFromHash(locationHash);
@@ -162,7 +162,6 @@ document.getElementById('button-go').onclick = function () {
 		width: parseInt(document.getElementById('shape-width').value, 10),
 		height: parseInt(document.getElementById('shape-height').value, 10)
 	};
-	console.log(oversample);
 	var options = {
 		density: parseFloat(document.getElementById('stroke-density').value),
 		stroke: document.getElementById('stroke-colour').value,
@@ -176,7 +175,6 @@ document.getElementById('button-go').onclick = function () {
 			y: document.getElementById('stroke-wrap-vertical').checked
 		}
 	};
-	console.log(shape, options);
 	
 	var result = document.getElementById('result');
 	result.innerHTML = '';
@@ -207,7 +205,6 @@ document.getElementById('button-go').onclick = function () {
 			document.body.style.backgroundPosition = 'top';
 			document.body.style.backgroundRepeat = options.wrap ? 'repeat' : 'no-repeat';
 		}
-		console.log("done");
 	});
 };
 
