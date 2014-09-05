@@ -1,0 +1,96 @@
+<script src="sketch-textures.js" type="text/javascript" charset="utf-8"></script>
+
+<style>
+#result {
+	text-align: center;
+}
+#result img {
+	padding: 20px;
+	border: 1px solid black;
+	border-radius: 10px;
+
+	background-color: white;
+}
+</style>
+
+<div id="settings">
+	<div class="shape">
+		<input class="number" id="shape-width" type="text" value="400" />x<input class="number" id="shape-height" type="text" value="400" />
+		<input class="number" id="line-length" type="text" value="100" />
+	</div>
+	<div class="stroke">
+		<input class="density" id="stroke-density" value="1" />
+		<input class="colour" id="stroke-colour" value="#ACE" />
+		<input class="opacity" id="stroke-opacity" value="0.1" />
+		<input class="line-width" id="stroke-width" value="1.2" />
+		<input class="angle" id="stroke-angle" value="30" />
+		<input class="taper" id="stroke-taper" type="text" value="0.5">
+		<input class="wrap" id="stroke-wrap" type="checkbox" checked>
+	</div>
+	
+	<input type="submit" id="button-go" value="generate" />
+	<input type="text" id="oversample" type="text" value="2" />
+	<input type="text" id="background" type="text" value="#FFF" />
+	<input type="checkbox" id="display-background">
+</div>
+
+<script>
+document.getElementById('button-go').onclick = function () {
+	var oversample = parseFloat(document.getElementById('oversample').value);
+	var background = document.getElementById('background').value;
+	var shape = {
+		width: parseInt(document.getElementById('shape-width').value, 10),
+		height: parseInt(document.getElementById('shape-height').value, 10)
+	};
+	console.log(oversample);
+	var options = {
+		density: parseFloat(document.getElementById('stroke-density').value),
+		stroke: document.getElementById('stroke-colour').value,
+		opacity: parseFloat(document.getElementById('stroke-opacity').value),
+		lineLength: parseFloat(document.getElementById('line-length').value)*oversample,
+		lineWidth: parseFloat(document.getElementById('stroke-width').value)*oversample,
+		angle: parseFloat(document.getElementById('stroke-angle').value),
+		taper: parseFloat(document.getElementById('stroke-taper').value),
+		wrap: document.getElementById('stroke-wrap').checked
+	};
+	console.log(shape, options);
+	
+	var result = document.getElementById('result');
+	result.innerHTML = '';
+	
+	var canvas = document.createElement('canvas');
+	canvas.width = shape.width*oversample, canvas.height = shape.height*oversample;
+	if (background) {
+		context = canvas.getContext('2d');
+		context.fillStyle = background;
+		context.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	
+	document.body.style.background = '#EEE';
+	sketchTexture(canvas, options, function (error, canvas) {
+		var smallCanvas = document.createElement('canvas');
+		smallCanvas.width = shape.width;
+		smallCanvas.height = shape.height;
+		var smallContext = smallCanvas.getContext('2d');
+		smallContext.drawImage(canvas, 0, 0, shape.width, shape.height);
+		
+		var dataUrl = smallCanvas.toDataURL();
+		var image = document.createElement('img');
+		image.src = dataUrl;
+		result.appendChild(image);
+		if (document.getElementById('display-background').checked) {
+			document.body.style.background = 'url(' + dataUrl + ')';
+			document.body.style.backgroundPosition = 'top';
+			document.body.style.backgroundRepeat = options.wrap ? 'repeat' : 'no-repeat';
+		}
+		console.log("done");
+	});
+};
+
+setTimeout(document.getElementById('button-go').onclick, 100);
+</script>
+
+<hr>
+
+<div id="result">
+</div>
